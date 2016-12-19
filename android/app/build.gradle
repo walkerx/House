@@ -98,14 +98,14 @@ android {
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
     }
-    signingConfigs {
-            release {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
-            }
-        }
+//    signingConfigs {
+//            release {
+//                storeFile file(MYAPP_RELEASE_STORE_FILE)
+//                storePassword MYAPP_RELEASE_STORE_PASSWORD
+//                keyAlias MYAPP_RELEASE_KEY_ALIAS
+//                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+//            }
+//        }
     splits {
         abi {
             reset()
@@ -118,7 +118,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -142,13 +142,14 @@ repositories {
 
 dependencies {
     compile project(':react-native-wechat')
-    compile project(':react-native-blur')
     compile project(':react-native-photo-view')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.facebook.react:react-native:+'
+    // From node_modules
     compile project(':react-native-fs')
     compile project(':react-native-blur')
+    compile files('libs/alipaySdk-20161129.jar')
 }
 
 buildscript {
