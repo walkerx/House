@@ -21,7 +21,7 @@ public class AliModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void pay(final String orderInfo, final Promise promise) {
+    public void doAliPay(final String orderInfo, final Promise promise) {
 
         Runnable payRunnable = new Runnable() {
             @Override
