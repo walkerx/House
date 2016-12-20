@@ -64,7 +64,7 @@ class Me extends Component {
                 animation: true,
                 hideOnPress: true,
                 delay: 100,
-                style:{
+                viewStyle:{
                     width:Dimensions.get('window').width,
                     height:30,
                     padding: 0,

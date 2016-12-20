@@ -21,7 +21,6 @@ export default function reducer(state = initialState, action = {}) {
                 userInfo: Immutable.Map(action.payload)
             };
         case ActionType.POST_THIRD_PARTY_LOGIN:
-            console.log(123123)
             return {
                 ...state,
                 userInfo: Immutable.Map(action.payload)

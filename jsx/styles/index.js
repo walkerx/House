@@ -9,7 +9,6 @@ import ModelCSS from './model';
 import ModelAllCSS from './modelAll';
 import MeCSS from './me';
 import LoginCSS from './login';
-import RegisterCSS from './register';
 import VipCSS from './vip';
 
 exports.MainCSS = MainCSS;
@@ -22,5 +21,4 @@ exports.ModelCSS = ModelCSS;
 exports.ModelAllCSS = ModelAllCSS;
 exports.MeCSS = MeCSS;
 exports.LoginCSS = LoginCSS;
-exports.RegisterCSS = RegisterCSS;
 exports.VipCSS = VipCSS;

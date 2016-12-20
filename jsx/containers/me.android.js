@@ -5,10 +5,10 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
 import {Actions,ActionConst} from "react-native-router-flux";
-import Spinner from 'react-native-loading-spinner-overlay';
-import lodash from 'lodash';
-import {ModelActions} from '../actions/index';
-import {ModelAllCSS,ModelCSS} from '../styles/index';
+import moment from 'moment';
+import {MeActions} from '../actions/index';
+import {MeCSS} from '../styles/index';
+import Toast from '../components/rnRootToast/index';
 import {
     StyleSheet,
     Image,
@@ -23,137 +23,130 @@ import {
 } from 'react-native';
 
 
-class ModelAll extends Component {
+class Me extends Component {
     static propTypes = {
-        modelAllList: PropTypes.instanceOf(Immutable.List)
+        userInfo: PropTypes.instanceOf(Immutable.Map),
+        localUserInfo: PropTypes.instanceOf(Immutable.Map),
+        errAuth: PropTypes.instanceOf(Immutable.Map)
     };
 
     static defaultProps = {
-        modelAllList: Immutable.List()
+        userInfo: Immutable.Map(),
+        localUserInfo: Immutable.Map(),
+        errAuth: Immutable.Map()
     };
 
     constructor(props) {
         super(props);
-        let ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => !Immutable.is(r1, r2)
-        });
-        var rows = lodash.chunk(props.modelAllList.toArray(),3);
         this.state = {
-            dataSource: ds.cloneWithRows(rows),
-            refreshing: false,
-            visible: true
+            localUserInfo: props.localUserInfo
         };
     }
 
     componentWillMount() {
-        this.refresh();
-        setTimeout(() => {
-            if(this.state.visible){
-                this.setState({
-                    visible: false
-                });
-            }
-        }, 3000);
+        this.props.MeActions.getUserInfo();
+        this.props.MeActions.getLocalUserInfo();
     }
 
     componentWillReceiveProps(nextProps) {
-        let rows = lodash.chunk(nextProps.modelAllList.toArray(),3);
-        this.setState({dataSource: this.state.dataSource.cloneWithRows(rows),refreshing: false});
-        setTimeout(() => {
-            if(this.state.visible){
-                this.setState({
-                    visible: false
-                });
-            }
-        }, 500);
+        if (!Immutable.is(this.props.userInfo, nextProps.userInfo)) {
+            this.props.MeActions.setLocalUserInfo(nextProps.userInfo);
+        }
+        if(!Immutable.is(this.props.localUserInfo, nextProps.localUserInfo)){
+            this.setState({localUserInfo:nextProps.localUserInfo})
+        }  
+        if(!Immutable.is(this.props.errAuth, nextProps.errAuth)){
+            this.props.MeActions.setLocalUserInfo(Immutable.Map());
+            Toast.show(nextProps.errAuth.get('msg'), {
+                duration: Toast.durations.SHORT,
+                position: 58,
+                shadow: false,
+                animation: true,
+                hideOnPress: true,
+                delay: 100,
+                viewStyle:{
+                    width:Dimensions.get('window').width,
+                    height:30,
+                    padding: 0,
+                    backgroundColor:'#87CEFA',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginHorizontal:0
+                },
+                textStyle: {
+                    fontSize: 13,
+                    color:'#ffffff'
+                }
+            });
+        }
     }
 
-    componentWillUnmount(){
-        this.props.ModelActions.deleteModelAll();
-    };
-
-    goModelDetail(model){
-        Actions.model({id:model.get('_id')});
+    logout(){
+        this.props.MeActions.logout();
+        this.props.MeActions.setLocalUserInfo(Immutable.Map());
     }
 
-    renderRow(dataRows) {
-        let rowViews = dataRows.map((dataRow,index)=>{
-            var width = (Dimensions.get('window').width - 20*2)/3 - 10;
-            let thumbnail = {uri: dataRow.get('thumbnail')};
-            if(! dataRow.get('thumbnail') || dataRow.get('thumbnail').indexOf('http') < 0){
-                thumbnail = null;
-            }
-            return (
-                <TouchableOpacity key={index} onPress={this.goModelDetail.bind(this, dataRow)} >
-                    <View  style={ModelCSS.modelMoreItem}>
-                        <Image
-                            resizeMode={Image.resizeMode.stretch}
-                            style={{width: width, height: width,backgroundColor:'#d2d2d2'}}
-                            source={thumbnail}>
-                        </Image>
-                        <View style={[ModelCSS.modelMoreName,{width:width}]}>
-                            <Text numberOfLines={1}  style={ModelCSS.modelMoreNameText}>{dataRow.get('name')}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            );
-        });
-
-        return (
-            <View style={ModelAllCSS.modelAllItem}>
-                {rowViews}
-            </View>
-        );
-    };
-    
-    refresh() {
-        this.setState({refreshing: true});
-        setTimeout(() => {
-            if(this.state.refreshing){
-                this.setState({refreshing: false});
-            }
-        }, 7000);
-        this.props.ModelActions.getAllModel(12, 0);
-    }
-
-    loadMore() {
-        this.props.ModelActions.getAllModel(12, this.props.modelAllList.size);
-    }
-    
     render() {
+        let vipEndTime = '';
+        if(this.state.localUserInfo.get('vipEndTime')
+            && moment(this.state.localUserInfo.get('vipEndTime')).format('YYYYMMDD') >= moment().format('YYYYMMDD')){
+            vipEndTime = moment(this.state.localUserInfo.get('vipEndTime')).format('YYYY年MM月DD日');
+        }
         return (
-            <View style={{flex: 1}}>
-                <Spinner visible={this.state.visible} />
-                <ListView
-                    style={{marginTop: 83}}
-                    refreshControl={
-                          <RefreshControl
-                              refreshing={this.state.refreshing}
-                              onRefresh={this.refresh.bind(this)}
-                          />}
-                    enableEmptySections={true}
-                    showsVerticalScrollIndicator={false}
-                    onEndReached={ this.loadMore.bind(this) }
-                    onEndReachedThreshold={50}
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderRow.bind(this)}
-                />
+            <View style={MeCSS.container}>
+                <View style={MeCSS.itemsView}>
+                    <View style={MeCSS.lineView}/>
+                    <TouchableOpacity onPress={()=>{Actions.vip()}}>
+                        <View style={MeCSS.vipView}>
+                            <Text>我的会员: {this.state.localUserInfo.get('account')}</Text>
+                            <View style={MeCSS.vipRightView}>
+                                {
+                                    vipEndTime.length>0?
+                                        <Text style={MeCSS.vipDuration}>{vipEndTime}到期</Text>
+                                        :
+                                        <Text style={[MeCSS.vipDuration,{color:'#ff6600'}]}>未开通</Text>
+                                }
+                                <Image
+                                    resizeMode={Image.resizeMode.stretch}
+                                    style={MeCSS.arrowImage}
+                                    source={require('../images/me/arrow.png')}/>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={MeCSS.lineView}/>
+                </View>
+                {
+                    this.state.localUserInfo.get('account')?
+                        <TouchableOpacity onPress={this.logout.bind(this)}>
+                            <View style={MeCSS.loginView}>
+                                <Text style={MeCSS.buttonText}>退出登录</Text>
+                            </View>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity onPress={()=>{Actions.register()}}>
+                            <View style={MeCSS.loginView}>
+                                <Text style={MeCSS.buttonText}>登录 / 注册</Text>
+                            </View>
+                        </TouchableOpacity>
+                }
+
             </View>
         );
     }
 }
 
 function mapStateToProps(state, ownProps) {
-
     return {
-        modelAllList: state.model.modelAllList
+        userInfo: state.me.userInfo,
+        localUserInfo: state.me.localUserInfo,
+        errAuth: state.errorInfo.errAuth
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        ModelActions: bindActionCreators(ModelActions, dispatch)
+        MeActions: bindActionCreators(MeActions, dispatch)
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModelAll);
+export default connect(mapStateToProps, mapDispatchToProps)(Me);

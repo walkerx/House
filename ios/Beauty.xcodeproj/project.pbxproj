@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -44,7 +45,6 @@
 		E556C10C1D9B9C6500B56FB6 /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E556C10B1D9B9C6500B56FB6 /* Images-2.xcassets */; };
 		E556C12C1D9E1C5300B56FB6 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = E556C12B1D9E1C5300B56FB6 /* Podfile */; };
 		E57F5DF41D9A05EE00EAB4E6 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E57F5DF31D9A05AB00EAB4E6 /* libRCTCameraRoll.a */; };
-		52931BC52EAB40539B55B7E4 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D26DD057D08D4221B6994E5C /* libRNFS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -247,8 +247,6 @@
 		E556C10B1D9B9C6500B56FB6 /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Images-2.xcassets"; path = "Beauty/Images-2.xcassets"; sourceTree = "<group>"; };
 		E556C12B1D9E1C5300B56FB6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E57F5DEE1D9A05AB00EAB4E6 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
-		4553A4F688FD4298AB455832 /* RNFS.xcodeproj */ = {isa = PBXFileReference; name = "RNFS.xcodeproj"; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		D26DD057D08D4221B6994E5C /* libRNFS.a */ = {isa = PBXFileReference; name = "libRNFS.a"; path = "libRNFS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -290,7 +288,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				15C11102088C401BBCB16057 /* libRNBlur.a in Frameworks */,
 				E42CB01F879347AAB7597146 /* libRCTWeChat.a in Frameworks */,
-				52931BC52EAB40539B55B7E4 /* libRNFS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,7 +433,6 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				02B3DDBFCB1948B5A6375A2D /* RNBlur.xcodeproj */,
 				97CE91B52C574859AD8314AF /* RCTWeChat.xcodeproj */,
-				4553A4F688FD4298AB455832 /* RNFS.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -939,7 +935,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Beauty.app/Beauty";
@@ -956,7 +951,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -991,7 +985,6 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Image",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native/Libraries",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				INFOPLIST_FILE = Beauty/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1036,7 +1029,6 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Image",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native/Libraries",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				INFOPLIST_FILE = Beauty/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1099,7 +1091,6 @@
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1144,7 +1135,6 @@
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

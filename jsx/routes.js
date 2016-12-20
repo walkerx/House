@@ -13,7 +13,6 @@ import {
     Me,
     Login,
     Vip,
-    Purchase,
     Register
 } from './containers';
 import {RouteCSS} from './styles/index'

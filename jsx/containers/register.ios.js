@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
 import {Actions,ActionConst} from "react-native-router-flux";
 import {MeActions, LoginActions} from '../actions/index';
-import {RegisterCSS} from '../styles/index';
+import {LoginCSS} from '../styles/index';
 import Toast from '../components/rnRootToast/index';
 import WeChat from '../lib/react-native-wechat';
 import {
@@ -45,11 +45,11 @@ class Register extends Component {
     }
 
     async componentWillMount() {
-        try {
-            await WeChat.registerApp('wxdfa578473977cc42');
-        } catch (e) {
-            console.error(e);
-        }
+        // try {
+        //     await WeChat.registerApp('wxdfa578473977cc42');
+        // } catch (e) {
+        //     console.error(e);
+        // }
     }
 
     componentWillUnmount(){
@@ -64,7 +64,7 @@ class Register extends Component {
                 animation: true,
                 hideOnPress: true,
                 delay: 100,
-                style:{
+                viewStyle:{
                     width:Dimensions.get('window').width,
                     height:30,
                     padding: 0,
@@ -107,16 +107,16 @@ class Register extends Component {
     
     render() {
         return (
-            <View style={RegisterCSS.container}>
-                <View style={[RegisterCSS.registerLine,{marginTop: 10}]}/>
-                <View style={RegisterCSS.registerView}>
-                    <View style={RegisterCSS.registerItemView}>
-                        <View style={RegisterCSS.leftView}>
-                            <Text style={RegisterCSS.itemText}>账号:</Text>
+            <View style={LoginCSS.container}>
+                <View style={[LoginCSS.registerLine,{marginTop: 10}]}/>
+                <View style={LoginCSS.registerView}>
+                    <View style={LoginCSS.registerItemView}>
+                        <View style={LoginCSS.leftView}>
+                            <Text style={LoginCSS.itemText}>账号:</Text>
                         </View>
                         <View>
                             <TextInput
-                                style={RegisterCSS.textInput}
+                                style={LoginCSS.textInput}
                                 placeholder="请设置2-16位账号"
                                 onChangeText={(text) => {
                                     this.setState({account:text})
@@ -124,14 +124,14 @@ class Register extends Component {
                             />
                         </View>
                     </View>
-                    <View style={RegisterCSS.registerLine}/>
-                    <View style={RegisterCSS.registerItemView}>
-                        <View style={RegisterCSS.leftView}>
-                            <Text style={RegisterCSS.itemText}>密码:</Text>
+                    <View style={LoginCSS.registerLine}/>
+                    <View style={LoginCSS.registerItemView}>
+                        <View style={LoginCSS.leftView}>
+                            <Text style={LoginCSS.itemText}>密码:</Text>
                         </View>
                         <View>
                             <TextInput
-                                style={RegisterCSS.textInput}
+                                style={LoginCSS.textInput}
                                 placeholder="请设置6-16位密码"
                                 onChangeText={(text) => {
                                     this.setState({passWd:text})
@@ -140,31 +140,26 @@ class Register extends Component {
                         </View>
                     </View>
                 </View>
-                <View style={RegisterCSS.registerLine}/>
+                <View style={LoginCSS.registerLine}/>
                 <TouchableOpacity onPress={this.register.bind(this)}>
-                    <View style={RegisterCSS.registerButton}>
-                        <Text style={RegisterCSS.buttonText}>完成注册</Text>
+                    <View style={LoginCSS.registerButton}>
+                        <Text style={LoginCSS.buttonText}>完成注册</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{Actions.login()}}>
-                    <View style={[RegisterCSS.registerButton,
+                    <View style={[LoginCSS.registerButton,
                         {backgroundColor: '#ffffff', borderWidth:1, borderColor:'#dbdbd9'}
                     ]}>
-                        <Text style={RegisterCSS.buttonText}>已有账号,登录</Text>
+                        <Text style={LoginCSS.buttonText}>已有账号,登录</Text>
                     </View>
                 </TouchableOpacity>
-                <View style={RegisterCSS.thirdPartyView}>
-                    <TouchableOpacity onPress={this.qqLogin.bind(this)}>
-                        <View style={[RegisterCSS.thirdPartyItem,{backgroundColor:'#2d8bde'}]}>
-                            <Text style={RegisterCSS.thirdPartyItemText}>使用QQ登录</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.wxLogin.bind(this)}>
-                        <View style={[RegisterCSS.thirdPartyItem,{backgroundColor:'#1aad19'}]}>
-                            <Text style={RegisterCSS.thirdPartyItemText}>使用微信登录</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity onPress={this.wxLogin.bind(this)}>
+                    <View style={[LoginCSS.registerButton,
+                        {backgroundColor:'#1aad19'}
+                    ]}>
+                        <Text style={LoginCSS.buttonText}>使用微信登录</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
         );
     }

@@ -46,7 +46,7 @@
 //  [MobClick startWithConfigure:UMConfigInstance];
 //  [MobClick setLogEnabled:YES];
   //向微信注册
-//  [WXApi registerApp:@"wx8684544c6fc01fcb" withDescription:@"福利社 1.0"];
+  [WXApi registerApp:@"wx8684544c6fc01fcb" withDescription:@"福利社 1.0"];
   
   return YES;
 }

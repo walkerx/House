@@ -10,6 +10,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {AlbumActions} from '../actions/index';
 import AutoResponisve from 'autoresponsive-react-native';
 import {AlbumCSS,ElementCSS,RouteCSS} from '../styles/index';
+import { BlurView } from 'react-native-blur';
 import {
     StyleSheet,
     Image,
@@ -21,7 +22,8 @@ import {
     Dimensions,
     ScrollView,
     Modal,
-    StatusBar
+    StatusBar,
+    findNodeHandle
 } from 'react-native';
 import utils from '../lib/utils';
 
@@ -54,10 +56,10 @@ class Album extends Component {
             ratioArr: [],  //图片高宽比
             visible: true,
             isNew: true,
-            moreShow: false
+            moreShow: false,
+            viewRef: 0
         };
     }
-
 
     componentWillMount() {
         this.props.AlbumActions.getAlbumDetail(this.props.data.get('_id'));
@@ -116,6 +118,15 @@ class Album extends Component {
         };
     }
 
+    imageLoaded(isBlur) {
+        if(this.state.visible){
+            this.setState({moreShow: true,visible: false});
+        }
+        if(isBlur){
+            this.setState({viewRef: findNodeHandle(this.imageRef)})
+        }
+    }
+
     renderChildren() {
         let rowViews = null;
         if(
@@ -132,25 +143,45 @@ class Album extends Component {
                 if(!pic || pic.indexOf('http') < 0){
                     cover = null;
                 }
-                if(index===2){
-                    cover = null; 
-                }
                 return(
                     <TouchableOpacity
                         style={{width:width,height:height}}
                         key={index}
                         onPress={that.showGirl.bind(that,that.state.album,index)}>
-                        <Image
-                            onLoadEnd={
-                                ()=>{
-                                    if(this.state.visible){
-                                        this.setState({moreShow: true,visible: false});
-                                    }
-                                }
-                            }
-                            resizeMode={Image.resizeMode.cover}
-                            style={{width:width,height:height,backgroundColor:'#d2d2d2'}}
-                            source={cover} />
+                        {
+                            !that.state.album.get('isVip') && index === that.state.album.get('pics').size-1?
+                                <Image
+                                    onLoadEnd={this.imageLoaded.bind(this,true)}
+                                    resizeMode={Image.resizeMode.cover}
+                                    ref={(ref)=>{that.imageRef = ref}}
+                                    style={{width:width,height:height,backgroundColor:'#d2d2d2'}}
+                                    source={cover} >
+                                        <BlurView
+                                            blurRadius={10}
+                                            downsampleFactor={5}
+                                            overlayColor={'rgba(255, 255, 255, .25)'}
+                                            style={{
+                                                position: "absolute",
+                                                left: 0,
+                                                top: 0,
+                                                bottom: 0,
+                                                right: 0,
+                                                width:width,
+                                                height:height
+                                            }}
+                                            viewRef={this.state.viewRef}>
+                                        </BlurView>
+                                        <View style={[{width:width,height:height},AlbumCSS.blurView]}>
+                                            <Text style={AlbumCSS.blurViewText}>未解锁{that.state.album.get('unlock')}张图片</Text>
+                                        </View>
+                                </Image>
+                                :
+                                <Image
+                                    onLoadEnd={this.imageLoaded.bind(this,false)}
+                                    resizeMode={Image.resizeMode.cover}
+                                    style={{width:width,height:height,backgroundColor:'#d2d2d2'}}
+                                    source={cover} />
+                        }
                     </TouchableOpacity>
                 )
             });
@@ -161,7 +192,7 @@ class Album extends Component {
     goAlbum(dataRow) {
         this.setState({isNew: false});
         let title = dataRow.get('name').length> 11?
-            dataRow.get('name').slice(0,11) + '...'
+        dataRow.get('name').slice(0,11) + '...'
             :
             dataRow.get('name');
         Actions.album({data: dataRow,title});
@@ -174,46 +205,46 @@ class Album extends Component {
         }
         return (
             <TouchableOpacity onPress={this.goAlbum.bind(this, dataRow)}>
-                {   
-                    this.state.moreShow?
+                <Image
+                    resizeMode={Image.resizeMode.cover}
+                    style={[ElementCSS.itemImage,{width:Dimensions.get('window').width-26,height: parseInt(utils.getDeviceRatio()*214) }]}
+                    source={cover}>
+                    <View style={[ElementCSS.itemContent,{height: parseInt(utils.getDeviceRatio()*214)}]}>
+                        <View>
+                            <Text numberOfLines={1} style={[ElementCSS.nameText,{fontSize: parseInt(utils.getDeviceRatio() * 20)}]}>{dataRow.get('name')}</Text>
+                        </View>
                         <Image
-                            resizeMode={Image.resizeMode.cover}
-                            style={[ElementCSS.itemImage,{width:Dimensions.get('window').width-26,height: parseInt(utils.getDeviceRatio()*214) }]}
-                            source={cover}>
-                            <View style={[ElementCSS.itemContent,{height: parseInt(utils.getDeviceRatio()*214)}]}>
-                                <View>
-                                    <Text numberOfLines={1} style={[ElementCSS.nameText,{fontSize: parseInt(utils.getDeviceRatio() * 20)}]}>{dataRow.get('name')}</Text>
-                                </View>
-                                <Image
-                                    resizeMode={Image.resizeMode.stretch}
-                                    style={ElementCSS.roundBg}
-                                    source={require('../images/common/roundBg.png')}>
-                                    <Text style={ElementCSS.picNumText}>{dataRow.get('picNum')} pic</Text>
-                                </Image>
-                            </View>
+                            resizeMode={Image.resizeMode.stretch}
+                            style={ElementCSS.roundBg}
+                            source={require('../images/common/roundBg.png')}>
+                            <Text style={ElementCSS.picNumText}>{dataRow.get('picNum')} pic</Text>
                         </Image>
-                        :
-                        null
-                }
+                    </View>
+                </Image>
             </TouchableOpacity>
         );
     };
 
     showGirl(data,index){
         this.setState({isNew: false});
-        var subhead = (index + 1) + '/' + data.get('pics').size;
-        Actions.showGirl({data:data, index: index,renderTitle:function(){
-            return(
-                <View style={RouteCSS.showGirlTitle}>
-                    <Text numberOfLines={1}  style={RouteCSS.showGirlTitleText}>
-                        {data.get('name')}
-                    </Text>
-                    <Text style={RouteCSS.showGirlTitleSubheader}>
-                        {subhead}
-                    </Text>
-                </View>
-            )
-        }})
+        if( !data.get('isVip') && index === data.get('pics').size-1){
+            Actions.vip();
+        }else{
+            var subhead = (index + 1) + '/' + data.get('pics').size;
+            Actions.showGirl({data:data, index: index,renderTitle:function(){
+                return(
+                    <View style={RouteCSS.showGirlTitle}>
+                        <Text numberOfLines={1} style={RouteCSS.showGirlTitleText}>
+                            {data.get('name')}
+                        </Text>
+                        <Text style={RouteCSS.showGirlTitleSubheader}>
+                            {subhead}
+                        </Text>
+                    </View>
+                )
+            }})
+        }
+
     }
 
     loadMore() {
@@ -250,7 +281,7 @@ class Album extends Component {
 
     render() {
         return (
-            <View style={[{flex: 1,backgroundColor:'#ffffff'},AlbumCSS.scrollView]}>
+            <View style={[{flex: 1},AlbumCSS.scrollView]}>
                 <StatusBar
                     barStyle={'default'}
                 />

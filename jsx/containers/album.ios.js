@@ -62,11 +62,11 @@ class Album extends Component {
     componentWillMount() {
         this.props.AlbumActions.getAlbumDetail(this.props.data.get('_id'));
         this.props.AlbumActions.getAlbumMore(this.props.data.get('_id'), 10, 0);
-        setTimeout(() => {
-            if(this.state.visible){
-                this.setState({visible: false});
-            }
-        }, 20000);
+        // setTimeout(() => {
+        //     if(this.state.visible){
+        //         this.setState({visible: false});
+        //     }
+        // }, 50000);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -116,6 +116,13 @@ class Album extends Component {
         };
     }
 
+    imageLoaded(index) {
+        console.log(index)
+        if(this.state.visible){
+            this.setState({moreShow: true,visible: false});
+        }
+    }
+
     renderChildren() {
         let rowViews = null;
         if(
@@ -138,11 +145,7 @@ class Album extends Component {
                         key={index}
                         onPress={that.showGirl.bind(that,that.state.album,index)}>
                         <Image
-                            onLoadEnd={()=>{
-                                if(this.state.visible){
-                                    this.setState({moreShow: true,visible: false});
-                                }
-                            }}
+                            onLoadEnd={this.imageLoaded.bind(this,index)}
                             resizeMode={Image.resizeMode.cover}
                             style={{width:width,height:height,backgroundColor:'#d2d2d2'}}
                             source={cover} >
@@ -177,29 +180,24 @@ class Album extends Component {
             cover = null;
         }
         return (
-            <TouchableOpacity onPress={this.goAlbum.bind(this, dataRow)}>
-                {
-                    this.state.moreShow?
-                        <Image
-                            resizeMode={Image.resizeMode.cover}
-                            style={[ElementCSS.itemImage,{width:Dimensions.get('window').width-26,height: parseInt(utils.getDeviceRatio()*214) }]}
-                            source={cover}>
-                            <View style={[ElementCSS.itemContent,{height: parseInt(utils.getDeviceRatio()*214)}]}>
-                                <View>
-                                    <Text numberOfLines={1} style={[ElementCSS.nameText,{fontSize: parseInt(utils.getDeviceRatio() * 20)}]}>{dataRow.get('name')}</Text>
-                                </View>
-                                <Image
-                                    resizeMode={Image.resizeMode.stretch}
-                                    style={ElementCSS.roundBg}
-                                    source={require('../images/common/roundBg.png')}>
-                                    <Text style={ElementCSS.picNumText}>{dataRow.get('picNum')} pic</Text>
-                                </Image>
+                <TouchableOpacity onPress={this.goAlbum.bind(this, dataRow)}>
+                    <Image
+                        resizeMode={Image.resizeMode.cover}
+                        style={[ElementCSS.itemImage,{width:Dimensions.get('window').width-26,height: parseInt(utils.getDeviceRatio()*214) }]}
+                        source={cover}>
+                        <View style={[ElementCSS.itemContent,{height: parseInt(utils.getDeviceRatio()*214)}]}>
+                            <View>
+                                <Text numberOfLines={1} style={[ElementCSS.nameText,{fontSize: parseInt(utils.getDeviceRatio() * 20)}]}>{dataRow.get('name')}</Text>
                             </View>
-                        </Image>
-                        :
-                        null
-                }
-            </TouchableOpacity>
+                            <Image
+                                resizeMode={Image.resizeMode.stretch}
+                                style={ElementCSS.roundBg}
+                                source={require('../images/common/roundBg.png')}>
+                                <Text style={ElementCSS.picNumText}>{dataRow.get('picNum')} pic</Text>
+                            </Image>
+                        </View>
+                    </Image>
+                </TouchableOpacity>
         );
     };
 

@@ -5,8 +5,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
 import {Actions,ActionConst} from "react-native-router-flux";
-import {MeActions} from '../actions/index';
-import {MeCSS} from '../styles/index';
+import moment from 'moment';
+import {VipActions} from '../actions/index';
+import {VipCSS} from '../styles/index';
 import {
     StyleSheet,
     Image,
@@ -17,122 +18,257 @@ import {
     TouchableOpacity,
     Dimensions,
     ScrollView,
-    Modal
+    Modal,
+    Alert,
+    NativeModules
 } from 'react-native';
 
+//创建原生模块实例
+var ReactMethod = NativeModules.ReactMethod;
 
 class Vip extends Component {
     static propTypes = {
-        isLogin: PropTypes.bool
+        vipList: PropTypes.instanceOf(Immutable.List),
+        localUserInfo: PropTypes.instanceOf(Immutable.Map),
+        wxPayResult: PropTypes.instanceOf(Immutable.Map),
+        aliPayResult: PropTypes.string
     };
 
     static defaultProps = {
-        isLogin: false
+        vipList: Immutable.List(),
+        localUserInfo: Immutable.Map(),
+        wxPayResult: Immutable.Map(),
+        aliPayResult: ''
     };
 
     constructor(props) {
         super(props);
+        let ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => !Immutable.is(r1, r2)
+        });
         this.state = {
-            isLogin: props.isLogin
+            dataSource: ds.cloneWithRows(props.vipList.toArray()),
+            localUserInfo: props.localUserInfo,
+            visible: false,
+            vipId: '',
+            payType: ''
         };
     }
 
     componentWillMount() {
-        this.props.MeActions.getLoginStatus();
+        this.props.VipActions.getVipList();
+        // try {
+        //     await WeChat.registerApp('wx8684544c6fc01fcb');
+        // } catch (e) {
+        //     console.error(e);
+        // }
     }
 
     componentWillReceiveProps(nextProps) {
-        if ( this.props.isLogin !== nextProps.isLogin) {
-            this.setState({isLogin: nextProps.isLogin})
+        if(!Immutable.is(this.props.localUserInfo, nextProps.localUserInfo)){
+            this.setState({localUserInfo:nextProps.localUserInfo})
+        }
+        if (!Immutable.is(this.props.vipList, nextProps.vipList)) {
+            this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.vipList.toArray())});
+        }
+        if (!Immutable.is(this.props.wxPayResult, nextProps.wxPayResult)) {
+            // ReactMethod.doWxPay(
+            //     nextProps.wxPayResult.get('partnerid'),
+            //     nextProps.wxPayResult.get('prepayid'),
+            //     nextProps.wxPayResult.get('package'),
+            //     nextProps.wxPayResult.get('noncestr'),
+            //     nextProps.wxPayResult.get('timestamp'),
+            //     nextProps.wxPayResult.get('sign')
+            // );
+        }
+        if (!Immutable.is(this.props.aliPayResult, nextProps.aliPayResult)) {
+            ReactMethod.doAliPay(nextProps.aliPayResult);
         }
     }
-    
+
+    openVip(vipId){
+        if(this.state.localUserInfo.get('account')){
+            this.setState({visible: true, vipId: vipId});
+        }else{//未登录
+            Actions.register();
+        }
+    }
+
+    renderRow(dataRow,p,index) {
+        return (
+            <View>
+                <View style={VipCSS.payItem}>
+                    <View  style={VipCSS.payItemLeft}>
+                        <View style={VipCSS.payItemLeftTop}>
+                            <Text>{dataRow.get('name')}</Text>
+                            <Text style={VipCSS.payItemLeftPrice}>¥{dataRow.get('price')}</Text>
+                        </View>
+                        <View>
+                            <Text style={VipCSS.payItemLeftBottomText}>
+                                {dataRow.get('desc')}
+                            </Text>
+                        </View>
+                    </View>
+                    {
+                        dataRow.get('recommend') === 1?
+                            <View style={VipCSS.payItemRight}>
+                                <View style={VipCSS.payItemRightRecommend}>
+                                    <Text style={VipCSS.payItemRightRecommendText}>
+                                        推荐
+                                    </Text>
+                                </View>
+                                <TouchableOpacity onPress={this.openVip.bind(this,dataRow.get('_id'))}>
+                                    <View style={VipCSS.payItemRightRecommendOpen}>
+                                        {
+                                            this.state.localUserInfo.get('account')
+                                            && this.state.localUserInfo.get('vipEndTime')
+                                            && moment(this.state.localUserInfo.get('vipEndTime')).format('YYYYMMDD') >= moment().format('YYYYMMDD')?
+                                                <Text style={VipCSS.payItemRightOpenText}>
+                                                    续费
+                                                </Text>
+                                                :
+                                                <Text style={VipCSS.payItemRightOpenText}>
+                                                    立即开通
+                                                </Text>
+                                        }
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                            :
+                            <TouchableOpacity onPress={this.openVip.bind(this,dataRow.get('_id'))}>
+                                <View style={VipCSS.payItemRightOpen}>
+                                    {
+                                        this.state.localUserInfo.get('account')
+                                        && this.state.localUserInfo.get('vipEndTime')
+                                        && moment(this.state.localUserInfo.get('vipEndTime')).format('YYYYMMDD')>= moment().format('YYYYMMDD')?
+                                            <Text style={VipCSS.payItemRightOpenText}>
+                                                续费
+                                            </Text>
+                                            :
+                                            <Text style={VipCSS.payItemRightOpenText}>
+                                                立即开通
+                                            </Text>
+                                    }
+                                </View>
+                            </TouchableOpacity>
+                    }
+                </View>
+                {
+                    index < this.props.vipList.size-1?
+                        <View style={VipCSS.payLine}/>
+                        :
+                        null
+                }
+            </View>
+        );
+    };
+
+    cancelPay(){
+        this.setState({visible: false})
+    }
+
+    wxPay(){
+        this.setState({payType: 'wxPay'});
+        this.props.VipActions.wxPay(this.state.vipId);
+    }
+
+    aliPay(){
+        this.setState({payType: 'aliPay'});
+        this.props.VipActions.aliPay(this.state.vipId);
+    }
+
     render() {
         return (
-            <View style={{flex: 1, marginTop: 58, backgroundColor:'#EEEEE0'}}>
-                <View style={
-                    {
-                    borderBottomWidth:1,
-                    marginTop: 10
-                    }
-                }/>
+            <View style={VipCSS.container}>
+                <Modal
+                    ref="_modal"
+                    transparent={true}
+                    onRequestClose={()=>{}}
+                    visible={this.state.visible}>
+                    <View style={VipCSS.modalView}>
+                        <TouchableOpacity onPress={this.aliPay.bind(this)}>
+                            <View style={VipCSS.modalItem}>
+                                <Text style={VipCSS.modalItemText}>支付宝支付</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <View style={VipCSS.modalLine}/>
+                        <TouchableOpacity onPress={this.cancelPay.bind(this)}>
+                            <View style={VipCSS.modalItem}>
+                                <Text style={VipCSS.modalItemText}>取消</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
+                <View style={VipCSS.vipDesc}>
+                    <View style={VipCSS.descItem}>
+                        <View style={VipCSS.descItemView}>
+                            <Image
+                                style={VipCSS.descItemImage}
+                                resizeMode={Image.resizeMode.cover}
+                                source={require('../images/vip/desc1.png')}
+                            />
+                            <Text style={VipCSS.descItemText1}>资源无锁</Text>
+                            <Text style={VipCSS.descItemText2}>全部资源免费获取</Text>
+                        </View>
+                        <View style={VipCSS.descItemView}>
+                            <Image
+                                style={VipCSS.descItemImage}
+                                resizeMode={Image.resizeMode.cover}
+                                source={require('../images/vip/desc2.png')}
+                            />
+                            <Text style={VipCSS.descItemText1}>高清大图</Text>
+                            <Text style={VipCSS.descItemText2}>高清大图免费下载</Text>
+                        </View>
+                    </View>
+                    <View style={[VipCSS.descItem,{marginTop:18}]}>
+                        <View style={VipCSS.descItemView}>
+                            <Image
+                                style={VipCSS.descItemImage}
+                                resizeMode={Image.resizeMode.cover}
+                                source={require('../images/vip/desc3.png')}
+                            />
+                            <Text style={VipCSS.descItemText1}>抢鲜套图</Text>
+                            <Text style={VipCSS.descItemText2}>全网最新抢先看</Text>
+                        </View>
+                        <View style={VipCSS.descItemView}>
+                            <Image
+                                style={VipCSS.descItemImage}
+                                resizeMode={Image.resizeMode.cover}
+                                source={require('../images/vip/desc4.png')}
+                            />
+                            <Text style={VipCSS.descItemText1}>宽带加速</Text>
+                            <Text style={VipCSS.descItemText2}>加载速度提升5倍</Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={VipCSS.descLine}/>
                 <View>
-                    <TouchableOpacity onPress={()=>{}}>
-                        <View style={
-                        {
-                            flexDirection:'row',
-                            justifyContent: 'space-between',
-                            height: 40,
-                            alignItems: 'center',
-                            backgroundColor:'#FFFFFF',
-                            paddingLeft:10,
-                            paddingRight:10
-                        }}>
-                            <Text>我的会员</Text>
-                            <View>
-                                <Text>11月30日到期</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={
-                                {
-                                borderBottomWidth:1,
-                                borderColor:'#A2B5CD',
-                                marginLeft:10
-                                }
-                            }/>
-                    <TouchableOpacity onPress={()=>{}}>
-                        <View style={{
-                            flexDirection:'row',
-                            paddingLeft:10,
-                            paddingRight:10,
-                            height: 40,
-                            alignItems: 'center',
-                            backgroundColor:'#FFFFFF'
-                        }}>
-                            <Text>我购买过得图片</Text>
-                            <View>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                    <ListView
+                        style={VipCSS.vipPay}
+                        enableEmptySections={true}
+                        showsVerticalScrollIndicator={false}
+                        dataSource={this.state.dataSource}
+                        renderRow={this.renderRow.bind(this)}
+                    />
                 </View>
-                <View style={{
-                    justifyContent: 'center',
-                    height: 40,
-                    alignItems: 'center',
-                    backgroundColor:'#FFFFFF',
-                    marginTop:20
-                }}>
-                    {
-                        this.state.isLogin?
-                            <TouchableOpacity onPress={()=>{}}>
-                                <View>
-                                    <Text>退出登录</Text>
-                                </View>
-                            </TouchableOpacity>
-                            :
-                            <TouchableOpacity onPress={()=>{}}>
-                                <View>
-                                    <Text>登录</Text>
-                                </View>
-                            </TouchableOpacity>
-                    }
-                </View>
+                <View style={VipCSS.descLine}/>
             </View>
         );
     }
 }
 
 function mapStateToProps(state, ownProps) {
-
     return {
-        isLogin: state.me.isLogin
+        vipList: state.vip.vipList,
+        localUserInfo: state.me.localUserInfo,
+        wxPayResult: state.vip.wxPayResult,
+        aliPayResult: state.vip.aliPayResult
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        MeActions: bindActionCreators(MeActions, dispatch)
+        VipActions: bindActionCreators(VipActions, dispatch)
     };
 }
 

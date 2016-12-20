@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
 import {Actions,ActionConst} from "react-native-router-flux";
 import {LoginActions,MeActions} from '../actions/index';
-import {RegisterCSS} from '../styles/index';
+import {LoginCSS} from '../styles/index';
 import Toast from '../components/rnRootToast/index';
 import WeChat from '../lib/react-native-wechat';
 import {
@@ -46,12 +46,7 @@ class Login extends Component {
         };
     }
 
-    async componentWillMount() {
-        try {
-            await WeChat.registerApp('wxdfa578473977cc42');
-        } catch (e) {
-            console.error(e);
-        }
+    componentWillMount() {
     }
 
     componentWillUnmount(){
@@ -66,7 +61,7 @@ class Login extends Component {
                 animation: true,
                 hideOnPress: true,
                 delay: 100,
-                style:{
+                viewStyle:{
                     width:Dimensions.get('window').width,
                     height:30,
                     padding: 0,
@@ -109,16 +104,16 @@ class Login extends Component {
     
     render() {
         return (
-            <View style={RegisterCSS.container}>
-                <View style={[RegisterCSS.registerLine,{marginTop: 10}]}/>
-                <View style={RegisterCSS.registerView}>
-                    <View style={RegisterCSS.registerItemView}>
-                        <View style={RegisterCSS.leftView}>
-                            <Text style={RegisterCSS.itemText}>账号:</Text>
+            <View style={LoginCSS.container}>
+                <View style={[LoginCSS.registerLine,{marginTop: 10}]}/>
+                <View style={LoginCSS.registerView}>
+                    <View style={LoginCSS.registerItemView}>
+                        <View style={LoginCSS.leftView}>
+                            <Text style={LoginCSS.itemText}>账号:</Text>
                         </View>
                         <View>
                             <TextInput
-                                style={RegisterCSS.textInput}
+                                style={LoginCSS.textInput}
                                 placeholder="请输入账号"
                                 onChangeText={(text) => {
                                     this.setState({account:text})
@@ -126,14 +121,14 @@ class Login extends Component {
                             />
                         </View>
                     </View>
-                    <View style={RegisterCSS.registerLine}/>
-                    <View style={RegisterCSS.registerItemView}>
-                        <View style={RegisterCSS.leftView}>
-                            <Text style={RegisterCSS.itemText}>密码:</Text>
+                    <View style={LoginCSS.registerLine}/>
+                    <View style={LoginCSS.registerItemView}>
+                        <View style={LoginCSS.leftView}>
+                            <Text style={LoginCSS.itemText}>密码:</Text>
                         </View>
                         <View>
                             <TextInput
-                                style={RegisterCSS.textInput}
+                                style={LoginCSS.textInput}
                                 placeholder="请输入密码"
                                 onChangeText={(text) => {
                                     this.setState({passWd:text})
@@ -142,24 +137,19 @@ class Login extends Component {
                         </View>
                     </View>
                 </View>
-                <View style={RegisterCSS.registerLine}/>
+                <View style={LoginCSS.registerLine}/>
                 <TouchableOpacity onPress={this.login.bind(this)}>
-                    <View style={RegisterCSS.registerButton}>
-                        <Text style={RegisterCSS.buttonText}>登录</Text>
+                    <View style={LoginCSS.registerButton}>
+                        <Text style={LoginCSS.buttonText}>登录</Text>
                     </View>
                 </TouchableOpacity>
-                <View style={[RegisterCSS.thirdPartyView,{marginTop: Dimensions.get('window').height-348}]}>
-                    <TouchableOpacity onPress={this.qqLogin.bind(this)}>
-                        <View style={[RegisterCSS.thirdPartyItem,{backgroundColor:'#2d8bde'}]}>
-                            <Text style={RegisterCSS.thirdPartyItemText}>使用QQ登录</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.wxLogin.bind(this)}>
-                        <View style={[RegisterCSS.thirdPartyItem,{backgroundColor:'#1aad19'}]}>
-                            <Text style={RegisterCSS.thirdPartyItemText}>使用微信登录</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity onPress={this.wxLogin.bind(this)}>
+                    <View style={[LoginCSS.registerButton,
+                        {backgroundColor:'#1aad19'}
+                    ]}>
+                        <Text style={LoginCSS.buttonText}>使用微信登录</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
         );
     }

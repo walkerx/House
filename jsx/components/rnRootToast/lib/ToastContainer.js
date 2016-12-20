@@ -205,7 +205,7 @@ class ToastContainer extends Component {
                         },
                         props.shadow && styles.shadowStyle,
                         props.shadowColor && {shadowColor: props.shadowColor},
-                        props.style
+                        props.viewStyle
                     ]}
                     pointerEvents="none"
                     ref={ele => this._root = ele}

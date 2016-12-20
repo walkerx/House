@@ -56,7 +56,7 @@ class Vip extends Component {
         };
     }
 
-    async componentWillMount() {
+    componentWillMount() {
         this.props.VipActions.getVipList();
         // try {
         //     await WeChat.registerApp('wx8684544c6fc01fcb');
@@ -186,12 +186,6 @@ class Vip extends Component {
                     transparent={true}
                     visible={this.state.visible}>
                     <View style={VipCSS.modalView}>
-                        <TouchableOpacity onPress={this.wxPay.bind(this)}>
-                            <View style={VipCSS.modalItem}>
-                                <Text style={VipCSS.modalItemText}>微信支付</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <View style={VipCSS.modalLine}/>
                         <TouchableOpacity onPress={this.aliPay.bind(this)}>
                             <View style={VipCSS.modalItem}>
                                 <Text style={VipCSS.modalItemText}>支付宝支付</Text>

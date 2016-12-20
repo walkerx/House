@@ -7,9 +7,9 @@ import {
 module.exports = StyleSheet.create(
     {
         container:{
-           flex: 1,
-           marginTop: 58,
-           backgroundColor:"#f5f5f5"
+            flex: 1,
+            marginTop: 58,
+            backgroundColor:"#f5f5f5"
         },
         vipDesc:{
             marginTop: 20,
@@ -108,7 +108,7 @@ module.exports = StyleSheet.create(
             backgroundColor:'#ffffff',
             marginLeft: 15,
             marginRight: 15,
-            marginTop: Dimensions.get('window').height- 188 ,
+            marginTop: Dimensions.get('window').height- 158 ,
             borderWidth: 1,
             borderColor: '#d8d8d8',
             borderRadius: 10
@@ -126,7 +126,7 @@ module.exports = StyleSheet.create(
             borderTopWidth:1,
             borderColor: '#d8d8d8'
         }
-        
+
     }
 );
 

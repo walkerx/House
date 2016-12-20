@@ -51,7 +51,7 @@ class Main extends Component {
         }
     }
 
-    componentWillMount() {
+    async componentWillMount() {
         this.props.MainActions.getTagList();
         this.props.ModelActions.getHotModel();
         setTimeout(() => {
@@ -80,7 +80,7 @@ class Main extends Component {
                     animation: true,
                     hideOnPress: true,
                     delay: 100,
-                    style:{
+                    viewStyle:{
                         width:Dimensions.get('window').width,
                         height:30,
                         padding: 0,
