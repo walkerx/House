@@ -8,6 +8,7 @@ import {Actions,ActionConst} from "react-native-router-flux";
 import {LoginActions,MeActions} from '../actions/index';
 import {LoginCSS} from '../styles/index';
 import Toast from '../components/rnRootToast/index';
+import WeChat from '../lib/react-native-wechat';
 import {
     StyleSheet,
     Image,
@@ -46,11 +47,6 @@ class Login extends Component {
     }
 
     componentWillMount() {
-        // try {
-        //     await WeChat.registerApp('wxdfa578473977cc42');
-        // } catch (e) {
-        //     console.error(e);
-        // }
     }
 
     componentWillUnmount(){
@@ -91,16 +87,16 @@ class Login extends Component {
     }
 
     wxLogin(){
-        // WeChat.sendAuthRequest('snsapi_userinfo','lucky').then(
-        //     (resp) => {
-        //         console.log(resp);
-        //         if(resp.errCode === 0 && resp.state === 'lucky'){
-        //             this.props.LoginActions.thirdPartyLogin(2,resp.code);
-        //         }
-        //     }
-        // ).catch((error)=> {
-        //     console.log(error)
-        // });
+        WeChat.sendAuthRequest('snsapi_userinfo','lucky').then(
+            (resp) => {
+                console.log(resp);
+                if(resp.errCode === 0 && resp.state === 'lucky'){
+                    this.props.LoginActions.thirdPartyLogin(2,resp.code);
+                }
+            }
+        ).catch((error)=> {
+            console.log(error)
+        });
     }
 
     qqLogin(){

@@ -58,11 +58,6 @@ class Vip extends Component {
 
     componentWillMount() {
         this.props.VipActions.getVipList();
-        // try {
-        //     await WeChat.registerApp('wx8684544c6fc01fcb');
-        // } catch (e) {
-        //     console.error(e);
-        // }
     }
 
     componentWillReceiveProps(nextProps) {

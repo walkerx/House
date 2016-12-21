@@ -17,11 +17,11 @@ public class AliModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "AliModule";
+        return "ReactMethod";
     }
 
     @ReactMethod
-    public void doAliPay(final String orderInfo, final Promise promise) {
+    public void doAliPay(final String orderInfo) {
 
         Runnable payRunnable = new Runnable() {
             @Override
@@ -29,7 +29,7 @@ public class AliModule extends ReactContextBaseJavaModule {
                 PayTask alipay = new PayTask(getCurrentActivity());
                 Map<String, String> result = alipay.payV2(orderInfo, true);
                 //WritableMap map = Arguments.createMap();
-                promise.resolve(1);
+                //promise.resolve(1);
             }
         };
 

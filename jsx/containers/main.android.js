@@ -22,7 +22,7 @@ import Immutable from 'immutable';
 import {MainActions,ModelActions} from '../actions/index';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from '../components/rnRootToast/index';
-
+import WeChat from '../lib/react-native-wechat';
 
 class Main extends Component {
 
@@ -61,6 +61,11 @@ class Main extends Component {
                 });
             }
         }, 3000);
+        try {
+            await WeChat.registerApp('wxdfa578473977cc42');
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
