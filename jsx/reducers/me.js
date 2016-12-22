@@ -16,6 +16,11 @@ export default function reducer(state = initialState, action = {}) {
                 ...state,
                 userInfo: Immutable.Map(action.payload)
             };
+        case ActionType.CLEAR_USER_INFO:
+            return {
+                ...state,
+                userInfo: Immutable.Map()
+            };
         case ActionType.SET_LOCAL_USER_INFO:
             return {
                 ...state,
@@ -29,6 +34,21 @@ export default function reducer(state = initialState, action = {}) {
         case ActionType.GET_LOGOUT:
             return {
                 ...state
+            };
+        case ActionType.POST_LOGIN:
+            return {
+                ...state,
+                userInfo: Immutable.Map(action.payload)
+            };
+        case ActionType.POST_REGISTER:
+            return {
+                ...state,
+                userInfo: Immutable.Map(action.payload)
+            };
+        case ActionType.POST_THIRD_PARTY_LOGIN:
+            return {
+                ...state,
+                userInfo: Immutable.Map(action.payload)
             };
         default:
             return state;

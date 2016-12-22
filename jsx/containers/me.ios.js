@@ -84,6 +84,7 @@ class Me extends Component {
     logout(){
         this.props.MeActions.logout();
         this.props.MeActions.setLocalUserInfo(Immutable.Map());
+        this.props.MeActions.clearUserInfo();
     }
     
     render() {

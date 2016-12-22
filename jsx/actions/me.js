@@ -12,6 +12,13 @@ var ModelActions = {
             }
         };
     },
+    clearUserInfo: function () {
+        return {
+            type: ActionType.CLEAR_USER_INFO,
+            meta: {
+            }
+        };
+    },
     setLocalUserInfo: function (userInfo) {
         return {
             type: ActionType.SET_LOCAL_USER_INFO,

@@ -25,6 +25,7 @@ var ActionType = {
     SET_LOCAL_USER_INFO: 'SET_LOCAL_USER_INFO',  //设置本地用户信息
     GET_LOCAL_USER_INFO: 'GET_LOCAL_USER_INFO',  //获取本地用户信息
     GET_LOGOUT: 'GET_LOGOUT',           //登出
+    CLEAR_USER_INFO: 'CLEAR_USER_INFO',
     //login
     POST_LOGIN: 'POST_LOGIN',           //登录
     POST_THIRD_PARTY_LOGIN: 'POST_THIRD_PARTY_LOGIN', //第三方登录

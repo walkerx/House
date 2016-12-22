@@ -45,11 +45,7 @@ class Register extends Component {
     }
 
     async componentWillMount() {
-        // try {
-        //     await WeChat.registerApp('wxdfa578473977cc42');
-        // } catch (e) {
-        //     console.error(e);
-        // }
+      
     }
 
     componentWillUnmount(){
@@ -172,7 +168,7 @@ class Register extends Component {
 function mapStateToProps(state, ownProps) {
     return {
         errResult: state.errorInfo.errResult,
-        userInfo: state.login.userInfo
+        userInfo: state.me.userInfo
     };
 }
 

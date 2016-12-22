@@ -168,7 +168,7 @@ class Register extends Component {
 function mapStateToProps(state, ownProps) {
     return {
         errResult: state.errorInfo.errResult,
-        userInfo: state.login.userInfo
+        userInfo: state.me.userInfo
     };
 }
 
