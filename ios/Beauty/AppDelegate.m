@@ -15,7 +15,6 @@
 #import "UMMobClick/MobClick.h"
 #import <AlipaySDK/AlipaySDK.h>
 #import "../Libraries/LinkingIOS/RCTLinkingManager.h"
-#import "WXApiManager.h"
 
 
 

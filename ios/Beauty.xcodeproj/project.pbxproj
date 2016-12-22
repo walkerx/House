@@ -41,7 +41,6 @@
 		E519ADBB1DFCF1CE000CB914 /* AlipaySDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E519ADB91DFCF1CE000CB914 /* AlipaySDK.bundle */; };
 		E519ADBD1DFCF61A000CB914 /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E519ADBA1DFCF1CE000CB914 /* AlipaySDK.framework */; };
 		E519AE6E1E0287DC000CB914 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E519AE6D1E0287DC000CB914 /* libsqlite3.0.tbd */; };
-		E519AEBF1E02B66F000CB914 /* WXApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E519AEBE1E02B66F000CB914 /* WXApiManager.m */; };
 		E545A8191E0A167E00F3F64F /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E545A8161E0A165A00F3F64F /* libRCTAnimation.a */; };
 		E556C10C1D9B9C6500B56FB6 /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E556C10B1D9B9C6500B56FB6 /* Images-2.xcassets */; };
 		E556C12C1D9E1C5300B56FB6 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = E556C12B1D9E1C5300B56FB6 /* Podfile */; };
@@ -265,8 +264,6 @@
 		E519ADB91DFCF1CE000CB914 /* AlipaySDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AlipaySDK.bundle; sourceTree = "<group>"; };
 		E519ADBA1DFCF1CE000CB914 /* AlipaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AlipaySDK.framework; sourceTree = "<group>"; };
 		E519AE6D1E0287DC000CB914 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
-		E519AEBD1E02B66F000CB914 /* WXApiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiManager.h; sourceTree = "<group>"; };
-		E519AEBE1E02B66F000CB914 /* WXApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXApiManager.m; sourceTree = "<group>"; };
 		E545A8101E0A165A00F3F64F /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		E556C10B1D9B9C6500B56FB6 /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Images-2.xcassets"; path = "Beauty/Images-2.xcassets"; sourceTree = "<group>"; };
 		E556C12B1D9E1C5300B56FB6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -410,8 +407,6 @@
 				E556C10B1D9B9C6500B56FB6 /* Images-2.xcassets */,
 				E519ADB51DFCEF9A000CB914 /* ReactMethod.h */,
 				E519ADB61DFCEFF0000CB914 /* ReactMethod.m */,
-				E519AEBD1E02B66F000CB914 /* WXApiManager.h */,
-				E519AEBE1E02B66F000CB914 /* WXApiManager.m */,
 			);
 			name = Beauty;
 			sourceTree = "<group>";
@@ -613,6 +608,7 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = XEBRS39X94;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
@@ -964,7 +960,6 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				E519AEBF1E02B66F000CB914 /* WXApiManager.m in Sources */,
 				E519ADB71DFCEFF0000CB914 /* ReactMethod.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -996,6 +991,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = XEBRS39X94;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1020,6 +1016,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = XEBRS39X94;
 				INFOPLIST_FILE = BeautyTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1137,8 +1134,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mei Qu (E7ULZNRERF)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mei Qu (E7ULZNRERF)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1188,8 +1185,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mei Qu (E7ULZNRERF)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mei Qu (E7ULZNRERF)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
