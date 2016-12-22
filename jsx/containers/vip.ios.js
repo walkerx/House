@@ -21,7 +21,8 @@ import {
     ScrollView,
     Modal,
     Alert,
-    NativeModules
+    NativeModules,
+    StatusBar
 } from 'react-native';
 
 //创建原生模块实例
@@ -58,6 +59,11 @@ class Vip extends Component {
 
     componentWillMount() {
         this.props.VipActions.getVipList();
+        // try {
+        //     await WeChat.registerApp('wx8684544c6fc01fcb');
+        // } catch (e) {
+        //     console.error(e);
+        // }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -176,6 +182,10 @@ class Vip extends Component {
     render() {
         return (
             <View style={VipCSS.container}>
+                <StatusBar
+                    hidden={false}
+                    barStyle={'default'}
+                />
                 <Modal
                     ref="_modal"
                     transparent={true}

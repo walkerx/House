@@ -143,13 +143,17 @@ class Login extends Component {
                         <Text style={LoginCSS.buttonText}>登录</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.wxLogin.bind(this)}>
-                    <View style={[LoginCSS.registerButton,
-                        {backgroundColor:'#1aad19'}
-                    ]}>
-                        <Text style={LoginCSS.buttonText}>使用微信登录</Text>
+                <View style={[LoginCSS.thirdPartyView,{marginTop: Dimensions.get('window').height - 300 + 65 - 125}]}>
+                    <TouchableOpacity onPress={this.wxLogin.bind(this)}> 
+                        <Image
+                            resizeMode={Image.resizeMode.stretch}
+                            style={LoginCSS.wxIconImage}
+                            source={require('../images/login/wxIcon.png')}/>
+                    </TouchableOpacity>
+                    <View style={LoginCSS.thirdPartyItem}>
+                        <Text style={LoginCSS.thirdPartyItemText}>使用微信登录</Text>
                     </View>
-                </TouchableOpacity>
+                </View>
             </View>
         );
     }

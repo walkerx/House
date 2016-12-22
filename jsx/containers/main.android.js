@@ -199,7 +199,7 @@ class Main extends Component {
                 style={MainCSS.mainIndicatorContainer}
                 addIndicatorTitleWidth={addIndicatorTitleWidth}
                 addIndicatorTitle={this._renderAddIndicatorTitle(addIndicatorTitleWidth)}
-                modelView={this._renderModelView()}
+                // modelView={this._renderModelView()}
                 titles={tabs}/>
         );
     }

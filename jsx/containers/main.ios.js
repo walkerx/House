@@ -10,7 +10,8 @@ import {
     Dimensions,
     Modal,
     ScrollView,
-    RefreshControl
+    RefreshControl,
+    StatusBar
 } from 'react-native';
 import {Actions} from "react-native-router-flux";
 import {IndicatorViewPager, PagerTitleIndicator} from '../components/viewpager/index';
@@ -166,6 +167,10 @@ class Main extends Component {
         var bodyItems = this.renderBody();
         return (
             <View style={{flex: 1}}>
+                <StatusBar
+                    hidden={false}
+                    barStyle={'default'}
+                />
                 {
                     this.state.requestError?
                         this.getRequestError()
@@ -200,7 +205,7 @@ class Main extends Component {
                 style={MainCSS.mainIndicatorContainer}
                 addIndicatorTitleWidth={addIndicatorTitleWidth}
                 addIndicatorTitle={this._renderAddIndicatorTitle(addIndicatorTitleWidth)}
-                modelView={this._renderModelView()}
+                // modelView={this._renderModelView()}
                 titles={tabs}/>
         );
     }

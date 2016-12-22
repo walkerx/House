@@ -25,6 +25,24 @@ module.exports = StyleSheet.create(
             height: Dimensions.get('window').height-60-50,
             marginTop: 60
         },
+        blurView:{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height-60-50
+        },
+        blurTipView:{
+            shadowColor: '#000000',
+            opacity: 0.7
+        },
+        blurTipViewText:{
+            color: '#ffffff',
+            fontSize: 30
+        },
+        blurLockImage:{
+            height: 35,
+            marginTop: 20
+        },
         downloadView:{
             height: 50,
             backgroundColor: '#1f1f1f',

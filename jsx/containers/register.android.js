@@ -149,13 +149,17 @@ class Register extends Component {
                         <Text style={LoginCSS.buttonText}>已有账号,登录</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.wxLogin.bind(this)}>
-                    <View style={[LoginCSS.registerButton,
-                        {backgroundColor:'#1aad19'}
-                    ]}>
-                        <Text style={LoginCSS.buttonText}>使用微信登录</Text>
+                <View style={LoginCSS.thirdPartyView}>
+                    <TouchableOpacity onPress={this.wxLogin.bind(this)}>
+                        <Image
+                            resizeMode={Image.resizeMode.stretch}
+                            style={LoginCSS.wxIconImage}
+                            source={require('../images/login/wxIcon.png')}/>
+                    </TouchableOpacity>
+                    <View style={LoginCSS.thirdPartyItem}>
+                        <Text style={LoginCSS.thirdPartyItemText}>使用微信登录</Text>
                     </View>
-                </TouchableOpacity>
+                </View>
             </View>
         );
     }

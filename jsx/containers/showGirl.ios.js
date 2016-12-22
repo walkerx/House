@@ -1,6 +1,7 @@
 import React, {PropTypes, Component} from 'react';
-import {Actions} from "react-native-router-flux";
+import {Actions,ActionConst} from "react-native-router-flux";
 import {ShowGirlCSS,RouteCSS} from '../styles/index'
+import { BlurView } from 'react-native-blur';
 import {
     Alert,
     Image,
@@ -98,25 +99,50 @@ class ShowImage extends Component {
         this.setState({display: !this.state.display});
     }
 
+    goVip(){
+        Actions.vip({hideNavBar: false});
+    }
+
     renderImageView() {
-        return this.state.imageSource.map((pic,index)=>{
-            return (
-                <ScrollView
-                    horizontal={true}
-                    style={{flex: 1}}
-                    maximumZoomScale={3.0}
-                    key={index}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}>
-                    <TouchableWithoutFeedback onPress={this.onPress.bind(this)} >
-                        <Image
-                            style={ShowGirlCSS.imageItem}
-                            source={pic}
-                            resizeMode="contain"
-                        />
-                    </TouchableWithoutFeedback>
-                </ScrollView>
-            );
+        let that = this;
+        return that.state.imageSource.map((pic,index)=>{
+            let imageView = <ScrollView
+                horizontal={true}
+                style={{flex: 1}}
+                maximumZoomScale={3.0}
+                key={index}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}>
+                <TouchableWithoutFeedback onPress={this.onPress.bind(this)} >
+                    <Image
+                        style={ShowGirlCSS.imageItem}
+                        source={pic}
+                        resizeMode="contain"
+                    />
+                </TouchableWithoutFeedback>
+            </ScrollView>;
+            if(!that.props.data.get('isVip') && index === that.props.data.get('pics').size-1){
+                imageView =
+                    <Image
+                        style={ShowGirlCSS.imageItem}
+                        source={pic}
+                        key={index}
+                        resizeMode="contain">
+                        <BlurView blurType="light" blurAmount={8} style={ShowGirlCSS.blurView}>
+                            <View style={ShowGirlCSS.blurTipView}>
+                                <Text style={ShowGirlCSS.blurTipViewText}>剩余{that.props.data.get('unlock')}张私密图片</Text>
+                            </View>
+                            <TouchableWithoutFeedback
+                                onPress={this.goVip.bind(this)} >
+                                <Image
+                                    style={ShowGirlCSS.blurLockImage}
+                                    source={require('../images/showGirl/lockBg.png')}
+                                    resizeMode="contain"/>
+                            </TouchableWithoutFeedback>
+                        </BlurView>
+                    </Image>
+            }
+            return imageView;
         });
     }
 

@@ -60,22 +60,20 @@ module.exports = StyleSheet.create(
             color: '#888888'
         },
         thirdPartyView:{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingLeft:30,
-            paddingRight:30,
-            marginTop: Dimensions.get('window').height-413
+            alignItems:'center',
+            justifyContent: 'center',
+            marginTop: Dimensions.get('window').height - 300 - 125
+        },
+        wxIconImage:{
+            width: 60,
+            height: 60
         },
         thirdPartyItem:{
-            height: 50,
-            width: 150,
-            justifyContent: 'center',
-            alignItems:'center',
-            borderRadius: 6
+            marginTop: 10
         },
         thirdPartyItemText:{
             fontSize:15,
-            color: '#ffffff'
+            color: '#d8d8d9'
         }
     }
 );

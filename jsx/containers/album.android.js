@@ -31,28 +31,20 @@ import utils from '../lib/utils';
 class Album extends Component {
     static propTypes = {
         albumDetail: PropTypes.instanceOf(Immutable.Map),
-        moreList: PropTypes.instanceOf(Immutable.List),
         albumDetailListLength: PropTypes.number,
-        albumMoreListLength: PropTypes.number,
         data: PropTypes.instanceOf(Immutable.Map)
     };
 
     static defaultProps = {
         albumDetail: Immutable.Map(),
-        moreList: Immutable.List(),
         albumDetailListLength: 0,
-        albumMoreListLength: 0,
         data: Immutable.Map()
     };
 
     constructor(props) {
         super(props);
-        let ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => !Immutable.is(r1, r2)
-        });
         this.state = {
             album: props.albumDetail,
-            dataSource: ds.cloneWithRows(props.moreList.toArray()),
             ratioArr: [],  //图片高宽比
             visible: true,
             isNew: true,
@@ -63,7 +55,6 @@ class Album extends Component {
 
     componentWillMount() {
         this.props.AlbumActions.getAlbumDetail(this.props.data.get('_id'));
-        this.props.AlbumActions.getAlbumMore(this.props.data.get('_id'), 10, 0);
         setTimeout(() => {
             if(this.state.visible){
                 this.setState({visible: false});
@@ -76,12 +67,12 @@ class Album extends Component {
             if (this.props.albumDetailListLength !== nextProps.albumDetailListLength ||
                 !Immutable.is(this.props.albumDetail, nextProps.albumDetail)
             ) {
+                this.setState({album: nextProps.albumDetail});
                 if(nextProps.albumDetail.get('girl')){
                     Actions.refresh({rightTitle:'模特详情',onRight:function(){
                         Actions.model({id:nextProps.albumDetail.get('girl')});
                     }})
                 }
-                this.setState({album: nextProps.albumDetail});
                 if(nextProps.albumDetail && nextProps.albumDetail.get('pics')){
                     let ratioArr = [],
                         that = this,
@@ -98,12 +89,6 @@ class Album extends Component {
                         that.setState({ratioArr: ratioArr});
                     });
                 }
-            }
-            if (
-                this.props.albumMoreListLength !== nextProps.albumMoreListLength ||
-                !Immutable.is(this.props.moreList, nextProps.moreList)
-            ) {
-                this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.moreList.toArray())});
             }
         }
     }
@@ -145,6 +130,7 @@ class Album extends Component {
                 }
                 return(
                     <TouchableOpacity
+                        activeOpacity={0.9}
                         style={{width:width,height:height}}
                         key={index}
                         onPress={that.showGirl.bind(that,that.state.album,index)}>
@@ -198,33 +184,6 @@ class Album extends Component {
         Actions.album({data: dataRow,title});
     }
 
-    renderRow(dataRow) {
-        let cover = {uri: dataRow.get('cover')};
-        if(!dataRow.get('cover') || dataRow.get('cover').indexOf('http') < 0){
-            cover = null;
-        }
-        return (
-            <TouchableOpacity onPress={this.goAlbum.bind(this, dataRow)}>
-                <Image
-                    resizeMode={Image.resizeMode.cover}
-                    style={[ElementCSS.itemImage,{width:Dimensions.get('window').width-26,height: parseInt(utils.getDeviceRatio()*214) }]}
-                    source={cover}>
-                    <View style={[ElementCSS.itemContent,{height: parseInt(utils.getDeviceRatio()*214)}]}>
-                        <View>
-                            <Text numberOfLines={1} style={[ElementCSS.nameText,{fontSize: parseInt(utils.getDeviceRatio() * 20)}]}>{dataRow.get('name')}</Text>
-                        </View>
-                        <Image
-                            resizeMode={Image.resizeMode.stretch}
-                            style={ElementCSS.roundBg}
-                            source={require('../images/common/roundBg.png')}>
-                            <Text style={ElementCSS.picNumText}>{dataRow.get('picNum')} pic</Text>
-                        </Image>
-                    </View>
-                </Image>
-            </TouchableOpacity>
-        );
-    };
-
     showGirl(data,index){
         this.setState({isNew: false});
         if( !data.get('isVip') && index === data.get('pics').size-1){
@@ -245,11 +204,6 @@ class Album extends Component {
             }})
         }
 
-    }
-
-    loadMore() {
-        this.setState({isNew: true});
-        this.props.AlbumActions.getAlbumMore(this.props.data.get('_id'), 10, this.props.moreList.size);
     }
 
     _renderHeader(){
@@ -279,6 +233,35 @@ class Album extends Component {
         )
     }
 
+    renderMoreView(){
+        return this.state.album.get('moreAlbums').map((dataRow,index)=>{
+            let cover = {uri: dataRow.get('cover')};
+            if(!dataRow.get('cover') || dataRow.get('cover').indexOf('http') < 0){
+                cover = null;
+            }
+            return (
+                <TouchableOpacity key={index} onPress={this.goAlbum.bind(this, dataRow)}>
+                    <Image
+                        resizeMode={Image.resizeMode.cover}
+                        style={[ElementCSS.itemImage,{width:Dimensions.get('window').width-26,height: parseInt(utils.getDeviceRatio()*214) }]}
+                        source={cover}>
+                        <View style={[ElementCSS.itemContent,{height: parseInt(utils.getDeviceRatio()*214)}]}>
+                            <View>
+                                <Text numberOfLines={1} style={[ElementCSS.nameText,{fontSize: parseInt(utils.getDeviceRatio() * 20)}]}>{dataRow.get('name')}</Text>
+                            </View>
+                            <Image
+                                resizeMode={Image.resizeMode.stretch}
+                                style={ElementCSS.roundBg}
+                                source={require('../images/common/roundBg.png')}>
+                                <Text style={ElementCSS.picNumText}>{dataRow.get('picNum')} pic</Text>
+                            </Image>
+                        </View>
+                    </Image>
+                </TouchableOpacity>
+            );
+        });
+    }
+
     render() {
         return (
             <View style={[{flex: 1},AlbumCSS.scrollView]}>
@@ -286,30 +269,26 @@ class Album extends Component {
                     barStyle={'default'}
                 />
                 <Spinner visible={this.state.visible} />
-                <ListView
-                    enableEmptySections={true}
-                    dataSource={this.state.dataSource}
-                    showsVerticalScrollIndicator={true}
-                    renderHeader={this._renderHeader.bind(this)}
-                    renderRow={this.renderRow.bind(this)}
-                    onEndReached={ this.loadMore.bind(this) }
-                    onEndReachedThreshold={50}
-                />
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}>
+                    {this._renderHeader()}
+                    {
+                        this.state.moreShow?
+                            this.renderMoreView()
+                            :
+                            null
+                    }
+                </ScrollView>
             </View>
         );
     }
 }
 
 function mapStateToProps(state, ownProps) {
-    let moreList = Immutable.List();
-    if(state.album.albumMoreList.last()){
-        moreList = state.album.albumMoreList.last().get('albums');
-    }
     return {
         albumDetail: state.album.albumDetailList.last(),
-        moreList: moreList,
-        albumDetailListLength: state.album.albumDetailList.size,
-        albumMoreListLength: state.album.albumMoreList.size
+        albumDetailListLength: state.album.albumDetailList.size
     };
 }
 
