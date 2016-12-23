@@ -222,7 +222,6 @@ class ShowImage extends Component {
     }
 
     render() {
-        console.log(this.state.viewRef);
         return (
             <View style={ShowGirlCSS.containerView}>
                 <ListView
