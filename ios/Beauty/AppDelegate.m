@@ -39,11 +39,11 @@
   [self.window makeKeyAndVisible];
   [NSThread sleepForTimeInterval:2.0];//设置启动页面时间
   
-//  UMConfigInstance.appKey = @"57ede38467e58e98a40035ca";
-//  UMConfigInstance.channelId = @"App Store";
-//  
-//  [MobClick startWithConfigure:UMConfigInstance];
-//  [MobClick setLogEnabled:YES];
+  UMConfigInstance.appKey = @"57ede38467e58e98a40035ca";
+  UMConfigInstance.channelId = @"App Store";
+
+  [MobClick startWithConfigure:UMConfigInstance];
+  [MobClick setLogEnabled:YES];
   //向微信注册
   [WXApi registerApp:@"wx8684544c6fc01fcb" withDescription:@"福利社 1.0"];
   
