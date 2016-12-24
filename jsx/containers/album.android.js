@@ -43,13 +43,17 @@ class Album extends Component {
 
     constructor(props) {
         super(props);
+        let ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => !Immutable.is(r1, r2)
+        });
         this.state = {
             album: props.albumDetail,
             ratioArr: [],  //图片高宽比
             visible: true,
             isNew: true,
             moreShow: false,
-            viewRef: 0
+            viewRef: 0,
+            dataSource: ds.cloneWithRows([])
         };
     }
 
@@ -67,6 +71,9 @@ class Album extends Component {
             if (this.props.albumDetailListLength !== nextProps.albumDetailListLength ||
                 !Immutable.is(this.props.albumDetail, nextProps.albumDetail)
             ) {
+                if(nextProps.albumDetail.get('moreAlbums')){
+                    this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.albumDetail.get('moreAlbums').toArray())});
+                }
                 this.setState({album: nextProps.albumDetail});
                 if(nextProps.albumDetail.get('girl')){
                     Actions.refresh({rightTitle:'模特详情',onRight:function(){
@@ -262,6 +269,33 @@ class Album extends Component {
         });
     }
 
+    renderRow(dataRow){
+        let cover = {uri: dataRow.get('cover')};
+        if(!dataRow.get('cover') || dataRow.get('cover').indexOf('http') < 0){
+            cover = null;
+        }
+        return (
+            <TouchableOpacity onPress={this.goAlbum.bind(this, dataRow)}>
+                <Image
+                    resizeMode={Image.resizeMode.cover}
+                    style={[ElementCSS.itemImage,{width:Dimensions.get('window').width-26,height: parseInt(utils.getDeviceRatio()*214) }]}
+                    source={cover}>
+                    <View style={[ElementCSS.itemContent,{height: parseInt(utils.getDeviceRatio()*214)}]}>
+                        <View>
+                            <Text numberOfLines={1} style={[ElementCSS.nameText,{fontSize: parseInt(utils.getDeviceRatio() * 20)}]}>{dataRow.get('name')}</Text>
+                        </View>
+                        <Image
+                            resizeMode={Image.resizeMode.stretch}
+                            style={ElementCSS.roundBg}
+                            source={require('../images/common/roundBg.png')}>
+                            <Text style={ElementCSS.picNumText}>{dataRow.get('picNum')} pic</Text>
+                        </Image>
+                    </View>
+                </Image>
+            </TouchableOpacity>
+        );
+    }
+
     render() {
         return (
             <View style={[{flex: 1},AlbumCSS.scrollView]}>
@@ -269,17 +303,13 @@ class Album extends Component {
                     barStyle={'default'}
                 />
                 <Spinner visible={this.state.visible} />
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}>
-                    {this._renderHeader()}
-                    {
-                        this.state.moreShow?
-                            this.renderMoreView()
-                            :
-                            null
-                    }
-                </ScrollView>
+                <ListView
+                    enableEmptySections={true}
+                    dataSource={this.state.dataSource}
+                    showsVerticalScrollIndicator={true}
+                    renderHeader={this._renderHeader.bind(this)}
+                    renderRow={this.renderRow.bind(this)}
+                />
             </View>
         );
     }

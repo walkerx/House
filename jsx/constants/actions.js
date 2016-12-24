@@ -12,6 +12,7 @@ var ActionType = {
     GET_ALBUM_DETAIL: 'GET_ALBUM_DETAIL', //获得专辑详情
     GET_ALBUM_MORE: 'GET_ALBUM_MORE', //获得专辑详情更多
     DELETE_ALBUM_DETAIL: 'DELETE_ALBUM_DETAIL', //删除当前这个详情
+    GET_SYSTEM_INFO: 'GET_SYSTEM_INFO',   //获取系统信息
     //element
     GET_ELEMENT_LIST: 'GET_ELEMENT_LIST',
     //model

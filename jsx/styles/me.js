@@ -17,7 +17,7 @@ module.exports = StyleSheet.create(
         },
         lineView:{
             borderBottomWidth:1,
-            borderColor:'#848484'
+            borderColor:'#d8d8d8'
         },
         vipView:{
             flexDirection:'row',

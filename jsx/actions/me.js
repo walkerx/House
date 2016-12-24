@@ -42,6 +42,15 @@ var ModelActions = {
             meta: {
             }
         };
+    },
+    getSystemInfo: function () {
+        return {
+            type: ActionType.GET_SYSTEM_INFO,
+            promise: (ajax) => ajax.get('/system/info',
+                {}),
+            meta: {
+            }
+        };
     }
 };
 

@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
 import {Actions,ActionConst} from "react-native-router-flux";
 import moment from 'moment';
-import {VipActions} from '../actions/index';
+import {VipActions,MeActions} from '../actions/index';
 import {VipCSS} from '../styles/index';
 import {
     StyleSheet,
@@ -20,7 +20,9 @@ import {
     ScrollView,
     Modal,
     Alert,
-    NativeModules
+    NativeModules,
+    StatusBar,
+    AppState
 } from 'react-native';
 
 //创建原生模块实例
@@ -57,12 +59,25 @@ class Vip extends Component {
 
     componentWillMount() {
         this.props.VipActions.getVipList();
+        this.props.MeActions.getLocalUserInfo();
+        AppState.addEventListener('change',this._handleAppStateChange.bind(this));
+    }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change');
+    }
+
+    _handleAppStateChange(currentAppState){
+        if(currentAppState === 'active'){
+            setTimeout(() => {
+                if(this.state.visible){
+                    this.props.MeActions.getUserInfo();
+                }
+            }, 1000);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-        if(!Immutable.is(this.props.localUserInfo, nextProps.localUserInfo)){
-            this.setState({localUserInfo:nextProps.localUserInfo})
-        }
         if (!Immutable.is(this.props.vipList, nextProps.vipList)) {
             this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.vipList.toArray())});
         }
@@ -78,6 +93,12 @@ class Vip extends Component {
         }
         if (!Immutable.is(this.props.aliPayResult, nextProps.aliPayResult)) {
             ReactMethod.doAliPay(nextProps.aliPayResult);
+        }
+        if (!Immutable.is(this.props.userInfo, nextProps.userInfo)) {
+            this.props.MeActions.setLocalUserInfo(nextProps.userInfo);
+        }
+        if(!Immutable.is(this.props.localUserInfo, nextProps.localUserInfo)){
+            this.setState({localUserInfo: nextProps.localUserInfo,visible: false});
         }
     }
 
@@ -175,10 +196,14 @@ class Vip extends Component {
     render() {
         return (
             <View style={VipCSS.container}>
+                <StatusBar
+                    hidden={false}
+                    barStyle={'default'}
+                />
                 <Modal
                     ref="_modal"
-                    transparent={true}
                     onRequestClose={()=>{}}
+                    transparent={true}
                     visible={this.state.visible}>
                     <View style={VipCSS.modalView}>
                         <TouchableOpacity onPress={this.aliPay.bind(this)}>
@@ -257,13 +282,15 @@ function mapStateToProps(state, ownProps) {
         vipList: state.vip.vipList,
         localUserInfo: state.me.localUserInfo,
         wxPayResult: state.vip.wxPayResult,
-        aliPayResult: state.vip.aliPayResult
+        aliPayResult: state.vip.aliPayResult,
+        userInfo: state.me.userInfo
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        VipActions: bindActionCreators(VipActions, dispatch)
+        VipActions: bindActionCreators(VipActions, dispatch),
+        MeActions: bindActionCreators(MeActions, dispatch)
     };
 }
 
