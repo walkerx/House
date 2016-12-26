@@ -1,9 +1,7 @@
 package com.beauty.house;
 
 import com.facebook.react.ReactActivity;
-import com.theweflex.react.WeChatPackage;
-import com.cmcewen.blurview.BlurViewPackage;
-import com.reactnative.photoview.PhotoViewPackage;
+import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends ReactActivity {
 
@@ -14,5 +12,14 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "Beauty";
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }
