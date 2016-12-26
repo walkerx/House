@@ -5,7 +5,8 @@ import Immutable from 'immutable';
 
 const initialState = {
     userInfo: Immutable.Map(),
-    localUserInfo: Immutable.Map()
+    localUserInfo: Immutable.Map(),
+    systemInfo: Immutable.Map()
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -49,6 +50,11 @@ export default function reducer(state = initialState, action = {}) {
             return {
                 ...state,
                 userInfo: Immutable.Map(action.payload)
+            };
+        case ActionType.GET_SYSTEM_INFO:
+            return {
+                ...state,
+                systemInfo: Immutable.fromJS(action.payload)
             };
         default:
             return state;

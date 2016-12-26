@@ -39,7 +39,8 @@ module.exports = StyleSheet.create(
             color: '#878787'
         },
         descLine:{
-            borderBottomWidth:1
+            borderBottomWidth:1,
+            borderColor: '#d8d8d8'
         },
         vipPay:{
             backgroundColor: '#ffffff',
@@ -52,7 +53,8 @@ module.exports = StyleSheet.create(
             justifyContent: 'space-between'
         },
         payLine:{
-            borderBottomWidth:1
+            borderBottomWidth:1,
+            borderColor: '#d8d8d8'
         },
         payItemLeft:{
         },

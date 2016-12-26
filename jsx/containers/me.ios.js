@@ -27,25 +27,29 @@ class Me extends Component {
     static propTypes = {
         userInfo: PropTypes.instanceOf(Immutable.Map),
         localUserInfo: PropTypes.instanceOf(Immutable.Map),
-        errAuth: PropTypes.instanceOf(Immutable.Map)
+        errAuth: PropTypes.instanceOf(Immutable.Map),
+        systemInfo: PropTypes.instanceOf(Immutable.Map)
     };
 
     static defaultProps = {
         userInfo: Immutable.Map(),
         localUserInfo: Immutable.Map(),
-        errAuth: Immutable.Map()
+        errAuth: Immutable.Map(),
+        systemInfo: Immutable.Map()
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            localUserInfo: props.localUserInfo
+            localUserInfo: props.localUserInfo,
+            systemInfo: props.systemInfo
         };
     }
 
     componentWillMount() {
         this.props.MeActions.getUserInfo();
         this.props.MeActions.getLocalUserInfo();
+        this.props.MeActions.getSystemInfo();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -79,6 +83,9 @@ class Me extends Component {
                 }
             });
         }
+        if (!Immutable.is(this.props.systemInfo, nextProps.systemInfo)) {
+            this.setState({systemInfo:nextProps.systemInfo})
+        }
     }
 
     logout(){
@@ -97,23 +104,32 @@ class Me extends Component {
             <View style={MeCSS.container}>
                 <View style={MeCSS.itemsView}>
                     <View style={MeCSS.lineView}/>
-                    <TouchableOpacity onPress={()=>{Actions.vip()}}>
-                        <View style={MeCSS.vipView}>
-                            <Text>我的会员: {this.state.localUserInfo.get('account')}</Text>
-                            <View style={MeCSS.vipRightView}>
-                                {
-                                    vipEndTime.length>0?
-                                        <Text style={MeCSS.vipDuration}>{vipEndTime}到期</Text>
-                                        :
-                                        <Text style={[MeCSS.vipDuration,{color:'#ff6600'}]}>未开通</Text>
-                                }
-                                <Image
-                                    resizeMode={Image.resizeMode.stretch}
-                                    style={MeCSS.arrowImage}
-                                    source={require('../images/me/arrow.png')}/>
+                    {
+                        this.state.systemInfo.get('hideVip') === 1?
+                            <View style={MeCSS.vipView}>
+                                <Text>我的会员: {this.state.localUserInfo.get('account')}</Text>
+                                <View style={MeCSS.vipRightView}></View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
+                            :
+                            <TouchableOpacity onPress={()=>{Actions.vip()}}>
+                                <View style={MeCSS.vipView}>
+                                    <Text>我的会员: {this.state.localUserInfo.get('account')}</Text>
+                                    <View style={MeCSS.vipRightView}>
+                                        {
+                                            vipEndTime.length>0?
+                                                <Text style={MeCSS.vipDuration}>{vipEndTime}到期</Text>
+                                                :
+                                                <Text style={[MeCSS.vipDuration,{color:'#ff6600'}]}>未开通</Text>
+                                        }
+                                        <Image
+                                            resizeMode={Image.resizeMode.stretch}
+                                            style={MeCSS.arrowImage}
+                                            source={require('../images/me/arrow.png')}/>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                    }
+
                     <View style={MeCSS.lineView}/>
                 </View>
                 {
@@ -140,7 +156,8 @@ function mapStateToProps(state, ownProps) {
     return {
         userInfo: state.me.userInfo,
         localUserInfo: state.me.localUserInfo,
-        errAuth: state.errorInfo.errAuth
+        errAuth: state.errorInfo.errAuth,
+        systemInfo: state.me.systemInfo
     };
 }
 
